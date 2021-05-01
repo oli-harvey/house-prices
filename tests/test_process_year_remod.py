@@ -1,15 +1,15 @@
 import sys
 sys.path.append('../')
 
-from functions.process_year_remod import *
+from functions.add_year_remod_pre1950_flag import *
 from functions.import_to_df import *
 
-def test_process_year_remod():
+def test_add_year_remod_pre1950_flag():
     files = ['train.csv']
     input_data = import_to_df(files)
     input_train_df = input_data['train']
 
-    out_df = process_year_remod(input_train_df)
+    out_df = add_year_remod_pre1950_flag(input_train_df)
     grouped_df = (
         out_df
         .groupby('YearRemodPre1950Flag')

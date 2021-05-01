@@ -1,6 +1,6 @@
 import pandas as pd
 
-def process_year_remod(
+def add_year_remod_pre1950_flag(
         input_df: pd.DataFrame
         ) -> pd.DataFrame:
     output_df = input_df.copy()
