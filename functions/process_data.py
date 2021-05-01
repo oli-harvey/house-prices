@@ -17,9 +17,8 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
     impute_cols = ['LotFrontage']
     
     processed_df = df.copy()
-
-
-    imp = IterativeImputer(max_iter=10, random_state=0)
-    processed_df
+    
+    # imp = IterativeImputer(max_iter=10, random_state=0)
+    # processed_df
     
     return processed_df
