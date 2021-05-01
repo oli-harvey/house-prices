@@ -1,24 +1,26 @@
 import sys
 sys.path.append('../')
 
-from functions.add_year_remod_pre1950_flag import *
+from functions.process_data import *
 from functions.import_to_df import *
 
-def test_add_year_remod_pre1950_flag():
+def test_process_data():
     files = ['train.csv']
     input_data = import_to_df(files)
     input_train_df = input_data['train']
 
-    out_df = add_year_remod_pre1950_flag(input_train_df)
-    grouped_df = (
-        out_df
-        .groupby('YearRemodPre1950Flag')
-        .agg({'YearRemodAdd': ['min', 'mean', 'max']})
-    )
+    input_rows = input_train_df.shape[0]
 
-    grouped_df.columns = grouped_df.columns.droplevel(0)
-    flag_mean = grouped_df.at[1, 'mean']
-    assert flag_mean == 1950, f"""
-        Expecting the pre 1950 flag to have mean of 1950.
-        Instead got {flag_mean}
+    output_df = process_data(input_train_df)
+    output_rows = output_df.shape[0]
+
+    assert isinstance(output_df, pd.DataFrame), f"""
+    Expecting to return a DataFrame
+    Instead got {type(out_rows)}
+    """
+   
+    assert input_rows == output_rows, f"""
+        Expecting the processed DataFrame to have the same rows as input
+        Input had {input_rows}
+        Output had {output_rows}
         """

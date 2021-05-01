@@ -19,6 +19,7 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
     processed_df = df.copy()
     
     # imp = IterativeImputer(max_iter=10, random_state=0)
-    # processed_df
+    processed_df = add_had_remod_flag(processed_df)
+    processed_df = add_year_remod_pre1950_flag(processed_df)
     
     return processed_df
