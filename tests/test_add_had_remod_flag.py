@@ -11,11 +11,11 @@ def test_add_had_remod_flag():
 
     out_df = add_had_remod_flag(input_train_df)
     flag_mean = out_df.loc[
-       out_df['YearRemodAdd'] == out_df['YearBuilt'],
+       out_df['YearRemodAdd'] != out_df['YearBuilt'],
        'HadRemodFlag'
     ].mean()
 
     assert flag_mean == 1, f"""
-        Expecting HadRemodFlag to be 1 in all cases YearRemodAdd == YearBuilt
+        Expecting HadRemodFlag to be 1 in all cases YearRemodAdd != YearBuilt
         Instead its only in {flag_mean * 100: .1f}% of cases
         """
