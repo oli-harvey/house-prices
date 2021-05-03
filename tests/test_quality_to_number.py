@@ -30,6 +30,4 @@ def test_add_zero_flag():
         {output_df.head()}
         Expected:
         {expected_df.head()}
-        Difference:
-        
         """
