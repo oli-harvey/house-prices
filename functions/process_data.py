@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas.api.types import is_string_dtype
 import os 
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
@@ -67,8 +68,18 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
         )
 
     # create simple dummies
-    dummy_cols = ['MSSubClass', 'MSZoning', 'Alley', 'MoSold', 'SaleType']
+    # dummy_cols = [
+    #     'MSSubClass', 'MSZoning', 'Alley', 'MoSold', 'SaleType', 'Street', 'LotShape', 'LandContour', 'LotConfig',
+    #     'LandSlope', 'Neighborhood', 'BldgType', 'HouseStyle', 'RoofStyle', 'RoofMatl', 'MasVnrType', 'ExterQual', 
+    #     ]
     # add quality cols as one hots too
+    # filter for all str columns left
+    dummy_cols = [
+        col for col in
+        processed_df.columns
+        if is_string_dtype(processed_df[col])
+    ]
+
     processed_df = pd.get_dummies(processed_df, columns=dummy_cols)
 
     # flag columns with 0s where useful
