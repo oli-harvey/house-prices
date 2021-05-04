@@ -177,3 +177,8 @@ Thumbs.db
 
 # profile report
 PandasProfile*
+
+# catboost
+catboost*
+# results
+submission*
