@@ -110,8 +110,8 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
     processed_df = add_year_remod_pre1950_flag(processed_df)
 
     # impute missing
-    impute_cols = ['LotFrontage']
-
+    # impute_cols = ['LotFrontage']
+    processed_df.fillna(-99, inplace=True)
     # imp = IterativeImputer(max_iter=10, random_state=0)
     # imp.fit(processed_df)
     # processed_df = imp.transform(processed_df)
