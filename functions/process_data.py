@@ -20,6 +20,17 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
     drop_cols = ['Utilities']
     processed_df = processed_df.drop(columns=drop_cols)
 
+    # impute missing
+    # impute_cols = ['LotFrontage']
+    processed_df = impute_cond_mean(
+        processed_df,
+        col_with_na='LotFrontage',
+        cond_cols=['LotShape']
+    )
+    # imp = IterativeImputer(max_iter=10, random_state=0)
+    # imp.fit(processed_df)
+    # processed_df = imp.transform(processed_df)
+
     # these ones have values that correspond to the categories so make dummies afterwards but also make these first
     value_dummies = {
         'BsmtFinTypeSF': (['BsmtFinType1', 'BsmtFinType2'], ['BsmtFinSF1', 'BsmtFinSF2'])
@@ -109,11 +120,6 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
     processed_df = add_had_remod_flag(processed_df)
     processed_df = add_year_remod_pre1950_flag(processed_df)
 
-    # impute missing
-    # impute_cols = ['LotFrontage']
-    processed_df.fillna(-99, inplace=True)
-    # imp = IterativeImputer(max_iter=10, random_state=0)
-    # imp.fit(processed_df)
-    # processed_df = imp.transform(processed_df)
+    processed_df = processed_df.fillna(-999)
     
     return processed_df
