@@ -15,9 +15,17 @@ for func in funcs:
 
 def process_data(df: pd.DataFrame) -> pd.DataFrame:
     processed_df = df.copy()
-
+    processed_df = calculate_inflation(
+        data=processed_df,
+        group_by_cat=['OverallQual'],
+        group_by_band=['GrLivArea'],
+        year='YrSold',
+        price='SalePrice'
+    )
+    processed_df['GoodQualityTotalSF'] = processed_df['1stFlrSF'] + processed_df['2ndFlrSF']
+    
     # drop useless columns. Utilities too sparsely populated to rely on model picking up
-    drop_cols = ['Utilities']
+    # drop_cols = ['Utilities']
     processed_df = processed_df.drop(columns=drop_cols)
 
     # impute missing
@@ -33,7 +41,7 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # these ones have values that correspond to the categories so make dummies afterwards but also make these first
     value_dummies = {
-        'BsmtFinTypeSF': (['BsmtFinType1', 'BsmtFinType2'], ['BsmtFinSF1', 'BsmtFinSF2'])
+        'BsmtFinTypeSF': (['BsmtFinType1', 'BsmtFinType2'], ['BsmtFinSF1', 'BsmtFinSF2', 'Utilities'])
     }
     for prefix, col_tuple in value_dummies.items():
         cat_columns, value_columns = col_tuple
