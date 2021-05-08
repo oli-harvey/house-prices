@@ -1,9 +1,11 @@
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 import pandas as pd
+import functions.import_to_df
 
 def calculate_inflation(
-        data: pd.DataFrame,
+        data_with_price: pd.DataFrame,
+        data_to_append_to: pd.DataFrame,
         group_by_cat: [str],
         group_by_band: [str],
         year: str,
@@ -11,18 +13,26 @@ def calculate_inflation(
         ) -> pd.DataFrame:
 
     group_by_full = [year, *group_by_cat, *group_by_band]
-    processed_df = data.copy()
+    calc_df = data_with_price.copy()
+    out_df = data_to_append_to.copy()
     
     # cont_vars = processed_df.select_dtypes(include=np.number).columns.tolist()
     for col in group_by_band:
         band_col_name = col + '_ntiles'
         cuts = 4
-        processed_df[band_col_name] = pd.qcut(
-            processed_df[col],
+        calc_df[band_col_name] = pd.qcut(
+            calc_df[col],
             q=cuts, 
             labels=range(1, cuts+1),
             duplicates='drop'
-        )  
+        )
+                
+        out_df[band_col_name] = pd.qcut(
+            out_df[col],
+            q=cuts, 
+            labels=range(1, cuts+1),
+            duplicates='drop'
+        )    
         group_by_full = [
             band_col_name 
             if i == col 
@@ -32,7 +42,7 @@ def calculate_inflation(
         ]
 
     yearly_summary_df = (
-        processed_df
+        calc_df
             .groupby(group_by_full)
             .agg(AvgPrice = (price, 'mean'))
             .reset_index()
@@ -72,8 +82,8 @@ def calculate_inflation(
     )['AvgPrice']
     combined_inf_df['Inflation'] = combined_inf_df['AvgPrice'] / combined_inf_df['BasePrice'] 
     combined_inf_df.drop(columns=['BasePrice'], inplace=True)
-    processed_df = processed_df.merge(
+    out_df = out_df.merge(
         combined_inf_df,
         on=['OverallQual', 'GrLivArea_ntiles', year]
     )
-    return processed_df
+    return out_df
